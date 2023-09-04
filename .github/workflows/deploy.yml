@@ -34,4 +34,6 @@ jobs:
         run: |
           chmod +x ./deploy.sh
           scp -o StrictHostKeyChecking=no -r ./nginx ./docker-compose.yml $OVH_USER@$OVH_IP_ADDRESS:/home/$OVH_USER/apps
-          ssh $OVH_USER@$OVH_IP_ADDRESS 'bash -s' < ./deploy.sh
+      - name: Deployer
+        run: |    
+          'bash -s' < ./deploy.sh
