@@ -33,7 +33,7 @@ jobs:
       - name: Copier les fichiers et déployer
         run: |
           chmod +x ./deploy.sh
-          scp -o StrictHostKeyChecking=no -r ./nginx ./docker-compose.yml $OVH_USER@$OVH_IP_ADDRESS:/home/$OVH_USER/apps
+          scp -o StrictHostKeyChecking=no -r ./nginx ./docker-compose.yml $OVH_USER@$OVH_IP_ADDRESS:/home/$OVH_USER/app2
       - name: Deployer
         run: |    
-          'bash -s' < ./deploy.sh
+          bash ./deploy.sh
