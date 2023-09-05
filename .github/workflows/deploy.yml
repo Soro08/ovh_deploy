@@ -9,21 +9,22 @@ jobs:
     name: Befor deploy
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: copy file via ssh key
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ secrets.OVH_IP_ADDRESS }}
-        username: ${{ secrets.OVH_USER }}
-        key: ${{ secrets.OVH_PRIVATE_KEY }}
-        port: 22
-        source: "./nginx, docker-compose.yml"
-        target: "/home/ubuntu/myriam/"
+      - uses: actions/checkout@v3
+      - name: copy file via ssh key
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.OVH_IP_ADDRESS }}
+          username: ${{ secrets.OVH_USER }}
+          key: ${{ secrets.OVH_PRIVATE_KEY }}
+          port: 22
+          source: "./nginx, docker-compose.yml"
+          target: "/home/ubuntu/myriam/"
 
   deploy:
     runs-on: ubuntu-latest  # Utilisez l'image Ubuntu par défaut
     needs: befor-deploy
     steps:
+      - uses: actions/checkout@v3
       - name: Deploy using ssh
         uses: appleboy/ssh-action@master
         with:
@@ -35,30 +36,3 @@ jobs:
             cd /home/ubuntu/myriam/
             docker-compose down -v
             docker-compose up -d --build
-
-    # steps:
-    #   - name: Checkout du code
-    #     uses: actions/checkout@v2  # Utilisez l'action de checkout pour obtenir le code du dépôt
-
-    #   - name: Installer les dépendances
-    #     run: |
-    #       sudo apt-get update
-    #       sudo apt-get install -y openssh-client bash
-
-    #   - name: Configuration SSH
-    #     run: |
-    #       mkdir -p ~/.ssh
-    #       echo "$OVH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-    #       chmod 700 ~/.ssh/id_rsa
-    #       eval "$(ssh-agent -s)"
-    #       ssh-add ~/.ssh/id_rsa
-
-    #   - name: Copier les fichiers et déployer
-    #     run: |
-    #       chmod +x ./deploy.sh
-    #       scp -o StrictHostKeyChecking=no -r ./nginx ./docker-compose.yml $OVH_USER@$OVH_IP_ADDRESS:/home/$OVH_USER/app2
-    #   - name: Deployer
-    #     run: |    
-    #       bash ./deploy.sh
-
-    
