@@ -5,21 +5,6 @@ on:
       - main  # Déclencher le workflow lorsqu'un push est effectué sur la branche "main"
 
 jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: copy file via ssh password
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ secrets.OVH_IP_ADDRESS }}
-        username: ${{ secrets.OVH_USER }}
-        key: ${{ secrets.OVH_PRIVATE_KEY }}
-        port: 22
-        source: "./nginx, docker-compose.yml"
-        target: "/home/ubuntu/myriam/"
-
   deploy:
     runs-on: ubuntu-latest  # Utilisez l'image Ubuntu par défaut
 
@@ -36,8 +21,12 @@ jobs:
           username: ${{ secrets.OVH_USER }}
           key: ${{ secrets.OVH_PRIVATE_KEY }}
           port: 22
+          source: "./nginx, docker-compose.yml"
+          target: "/home/ubuntu/myriam/"
           script: |
-            ls
+            cd /home/ubuntu/apps
+            docker-compose down -v
+            docker-compose up -d --build
 
     # steps:
     #   - name: Checkout du code
