@@ -5,6 +5,21 @@ on:
       - main  # Déclencher le workflow lorsqu'un push est effectué sur la branche "main"
 
 jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: copy file via ssh password
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.OVH_IP_ADDRESS }}
+        username: ${{ secrets.OVH_USER }}
+        key: ${{ secrets.OVH_PRIVATE_KEY }}
+        port: 22
+        source: "./nginx"
+        target: "/home/ubuntu/myriam/"
+
   deploy:
     runs-on: ubuntu-latest  # Utilisez l'image Ubuntu par défaut
 
@@ -23,6 +38,7 @@ jobs:
           port: 22
           script: |
             ls
+
     # steps:
     #   - name: Checkout du code
     #     uses: actions/checkout@v2  # Utilisez l'action de checkout pour obtenir le code du dépôt
