@@ -5,14 +5,24 @@ on:
       - main  # Déclencher le workflow lorsqu'un push est effectué sur la branche "main"
 
 jobs:
+  befor-deploy:
+    name: Befor deploy
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: copy file via ssh key
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.OVH_IP_ADDRESS }}
+        username: ${{ secrets.OVH_USER }}
+        key: ${{ secrets.OVH_PRIVATE_KEY }}
+        port: 22
+        source: "./nginx, docker-compose.yml"
+        target: "/home/ubuntu/myriam/"
+
   deploy:
     runs-on: ubuntu-latest  # Utilisez l'image Ubuntu par défaut
-
-    env:  # Définissez vos variables d'environnement ici
-      OVH_PRIVATE_KEY: ${{ secrets.OVH_PRIVATE_KEY }}  # Utilisez un secret pour les clés privées
-      OVH_USER: ${{ secrets.OVH_USER }}  # Utilisez un secret pour l'utilisateur OVH
-      OVH_IP_ADDRESS: ${{ secrets.OVH_IP_ADDRESS }}  # Utilisez un secret pour l'adresse IP
-    
+    needs: befor-deploy
     steps:
       - name: Deploy using ssh
         uses: appleboy/ssh-action@master
@@ -21,10 +31,8 @@ jobs:
           username: ${{ secrets.OVH_USER }}
           key: ${{ secrets.OVH_PRIVATE_KEY }}
           port: 22
-          source: "./nginx, docker-compose.yml"
-          target: "/home/ubuntu/myriam/"
           script: |
-            cd /home/ubuntu/apps
+            cd /home/ubuntu/myriam/
             docker-compose down -v
             docker-compose up -d --build
 
