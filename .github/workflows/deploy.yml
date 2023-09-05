@@ -12,28 +12,40 @@ jobs:
       OVH_PRIVATE_KEY: ${{ secrets.OVH_PRIVATE_KEY }}  # Utilisez un secret pour les clés privées
       OVH_USER: ${{ secrets.OVH_USER }}  # Utilisez un secret pour l'utilisateur OVH
       OVH_IP_ADDRESS: ${{ secrets.OVH_IP_ADDRESS }}  # Utilisez un secret pour l'adresse IP
-
+    
     steps:
-      - name: Checkout du code
-        uses: actions/checkout@v2  # Utilisez l'action de checkout pour obtenir le code du dépôt
+      - name: Deploy using ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.OVH_USER }}
+          username: ${{ secrets.OVH_USER }}
+          key: ${{ secrets.OVH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            ls
+    # steps:
+    #   - name: Checkout du code
+    #     uses: actions/checkout@v2  # Utilisez l'action de checkout pour obtenir le code du dépôt
 
-      - name: Installer les dépendances
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y openssh-client bash
+    #   - name: Installer les dépendances
+    #     run: |
+    #       sudo apt-get update
+    #       sudo apt-get install -y openssh-client bash
 
-      - name: Configuration SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "$OVH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-          chmod 700 ~/.ssh/id_rsa
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_rsa
+    #   - name: Configuration SSH
+    #     run: |
+    #       mkdir -p ~/.ssh
+    #       echo "$OVH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    #       chmod 700 ~/.ssh/id_rsa
+    #       eval "$(ssh-agent -s)"
+    #       ssh-add ~/.ssh/id_rsa
 
-      - name: Copier les fichiers et déployer
-        run: |
-          chmod +x ./deploy.sh
-          scp -o StrictHostKeyChecking=no -r ./nginx ./docker-compose.yml $OVH_USER@$OVH_IP_ADDRESS:/home/$OVH_USER/app2
-      - name: Deployer
-        run: |    
-          bash ./deploy.sh
+    #   - name: Copier les fichiers et déployer
+    #     run: |
+    #       chmod +x ./deploy.sh
+    #       scp -o StrictHostKeyChecking=no -r ./nginx ./docker-compose.yml $OVH_USER@$OVH_IP_ADDRESS:/home/$OVH_USER/app2
+    #   - name: Deployer
+    #     run: |    
+    #       bash ./deploy.sh
+
+    
