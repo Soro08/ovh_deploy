@@ -17,7 +17,7 @@ jobs:
       - name: Deploy using ssh
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.OVH_USER }}
+          host: ${{ secrets.OVH_IP_ADDRESS }}
           username: ${{ secrets.OVH_USER }}
           key: ${{ secrets.OVH_PRIVATE_KEY }}
           port: 22
