@@ -1,6 +1,11 @@
 name: deploy with ovh
 on: [push]
 
+env:
+    DEBUG: ${{secrets.DEBUG}}
+    OVH_IP_ADDRESS: ${{secrets.OVH_IP_ADDRESS}}
+    OVH_USER: ${{secrets.OVH_USER}}
+    OVH_PRIVATE_KEY: ${{secrets.OVH_PRIVATE_KEY}}
 jobs:
     run_tests:
         runs-on: ubuntu-20.04
