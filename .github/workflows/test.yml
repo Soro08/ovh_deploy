@@ -10,3 +10,4 @@ jobs:
               run: |
                   chmod +x ./apps/setup_env.sh
                   bash ./apps/setup_env.sh
+            - run: cat ./apps/.env 
