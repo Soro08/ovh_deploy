@@ -9,5 +9,4 @@ jobs:
             - name: Run script file
               run: |
                   chmod +x ./apps/setup_env.sh
-                  ./apps/setup_env.sh
-              shell: bash
+                  bash ./apps/setup_env.sh

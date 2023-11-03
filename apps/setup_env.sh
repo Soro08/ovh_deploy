@@ -1,6 +1,6 @@
-echo DEBUG=${secrets.DEBUG} >> .env
+echo DEBUG=${{secrets.DEBUG}} >> .env
 
-echo SECRET_KEY=${secrets.SECRET_KEY} >> .env
+echo OVH_IP_ADDRESS= ${{ secrets.OVH_IP_ADDRESS }} >> .env
 echo DJANGO_ALLOWED_HOSTS="localhost 127.0.0.1 [::1]" >> .env
-echo CELERY_BROKER=${secrets.CELERY_BROKER} >> .env
-echo CELERY_BACKEND=${secrets.CELERY_BACKEND} >> .env
+echo OVH_USER=${{ secrets.OVH_USER }} >> .env
+echo OVH_PRIVATE_KEY=${{ secrets.OVH_PRIVATE_KEY }} >> .env
