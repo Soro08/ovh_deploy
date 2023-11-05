@@ -1,0 +1,33 @@
+name: deploy with ovh
+on: [push]
+
+env:
+    DEBUG: ${{secrets.DEBUG}}
+    OVH_IP_ADDRESS: ${{secrets.OVH_IP_ADDRESS}}
+    OVH_USER: ${{secrets.OVH_USER}}
+    OVH_PRIVATE_KEY: ${{secrets.OVH_PRIVATE_KEY}}
+jobs:
+    run_tests:
+        runs-on: ubuntu-20.04
+        steps:
+            - uses: actions/checkout@v2
+            - name: Run script file
+              run: |
+                  chmod +x ./apps/setup_env.sh
+                  bash ./apps/setup_env.sh
+            - run: cat ./apps/.env
+    scan_images:
+        runs-on: ubuntu-20.04
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+            - name: Image Scan
+              uses: aquasecurity/trivy-action@master
+              with:
+                  image-ref: "docker.io/soro08/codeln3d_dashboard"
+                  format: "sarif"
+                  output: "trivy-image-results.sarif"
+                  exit-code: "1"
+                  ignore-unfixed: true
+                  vuln-type: "os,library"
+                  severity: "CRITICAL,HIGH"
