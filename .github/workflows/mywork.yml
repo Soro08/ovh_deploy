@@ -16,7 +16,7 @@ jobs:
                   chmod +x ./apps/setup_env.sh
                   bash ./apps/setup_env.sh
             - run: cat ./apps/.env
-    scan_images:
+    scan_images_1:
         runs-on: ubuntu-20.04
         steps:
             - name: Checkout code
@@ -24,8 +24,24 @@ jobs:
             - name: Image Scan
               uses: aquasecurity/trivy-action@master
               with:
-                  image-ref: "docker.io/soro08/codeln3d_dashboard"
-                  format: "table"
+                  image-ref: "docker.io/soro08/codeln3d_dashboard:latest"
+                  format: "sarif"
+                  output: "trivy-image-results.sarif"
+                  exit-code: "1"
+                  ignore-unfixed: true
+                  vuln-type: "os,library"
+                  severity: "CRITICAL,HIGH"
+    scan_images_2:
+        runs-on: ubuntu-20.04
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+            - name: Image Scan
+              uses: aquasecurity/trivy-action@master
+              with:
+                  image-ref: "docker.io/soro08/codeln3d_celery:latest"
+                  format: "sarif"
+                  output: "trivy-image-results.sarif"
                   exit-code: "1"
                   ignore-unfixed: true
                   vuln-type: "os,library"
