@@ -25,12 +25,11 @@ jobs:
               uses: aquasecurity/trivy-action@master
               with:
                   image-ref: "docker.io/soro08/codeln3d_dashboard:latest"
-                  format: "sarif"
-                  output: "trivy-image-results.sarif"
-                  exit-code: "1"
+                  format: 'table'
+                  exit-code: '1'
                   ignore-unfixed: true
-                  vuln-type: "os,library"
-                  severity: "CRITICAL,HIGH"
+                  vuln-type: 'os,library'
+                  severity: 'CRITICAL,HIGH'
     scan_images_2:
         runs-on: ubuntu-20.04
         steps:
@@ -40,8 +39,7 @@ jobs:
               uses: aquasecurity/trivy-action@master
               with:
                   image-ref: "docker.io/soro08/codeln3d_celery:latest"
-                  format: "sarif"
-                  output: "trivy-image-results.sarif"
+                  format: "table"
                   exit-code: "1"
                   ignore-unfixed: true
                   vuln-type: "os,library"
